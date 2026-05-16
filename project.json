@@ -1,0 +1,29 @@
+{
+  "overview": "Zyro TV is a premium dark-themed streaming platform for shows and movies with neon purple accents. It features a Hulu-style layout, direct video uploads, subscription plans via IMVU credits, a full admin panel, user authentication, watchlist, search, and PWA support for adding to your home screen.",
+  "features": [
+    "Hulu-style layout with hero banner and horizontal show rows",
+    "Direct single-file video uploads with progress tracking",
+    "Subscription plans (Free/Pro/Premium) via IMVU credits",
+    "Admin panel with live 10-second refresh for signups and subscriptions",
+    "Per-plan percentage-off discounts toggled in admin",
+    "Free vs subscription-only show access control with lock screens",
+    "Watchlist, watch history, and episode progress tracking",
+    "Real-time search and category filtering",
+    "PWA support — add to home screen on iOS/Android",
+    "No likes or view counts visible anywhere",
+    "Password-protected admin panel",
+    "Mobile-responsive design throughout"
+  ],
+  "category": "streaming",
+  "tags": [
+    "streaming",
+    "movies",
+    "shows",
+    "video",
+    "subscriptions",
+    "pwa",
+    "admin",
+    "imvu"
+  ],
+  "last_updated": "2026-05-16T00:49:53.752Z"
+}

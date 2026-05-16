@@ -1,0 +1,332 @@
+type http_request_result = 
+ record {
+   body: blob;
+   headers: vec http_header;
+   status: nat;
+ };
+type http_header = 
+ record {
+   name: text;
+   value: text;
+ };
+type _ImmutableObjectStorageRefillResult = 
+ record {
+   success: opt bool;
+   topped_up_amount: opt nat;
+ };
+type _ImmutableObjectStorageRefillInformation = record {
+                                                  proposed_top_up_amount:
+                                                   opt nat;};
+type _ImmutableObjectStorageCreateCertificateResult = 
+ record {
+   blob_hash: text;
+   method: text;
+ };
+type WatchHistoryEntryPublic = 
+ record {
+   episodeId: EpisodeId;
+   lastWatchedAt: Timestamp;
+   progressSeconds: nat;
+   showId: ShowId;
+ };
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type UserProfilePublic = 
+ record {
+   bio: text;
+   createdAt: Timestamp;
+   "principal": UserId;
+   profilePicUrl: opt text;
+   subscriptionExpiresAt: opt int;
+   subscriptionTier: SubscriptionTier;
+   username: text;
+ };
+type UserId = principal;
+type UserApprovalInfo = 
+ record {
+   "principal": principal;
+   status: ApprovalStatus;
+ };
+type UpdateShowInput = 
+ record {
+   category: Category;
+   coverImageUrl: opt text;
+   description: text;
+   id: ShowId;
+   isFree: bool;
+   title: text;
+   trailerBlob: opt ExternalBlob;
+ };
+type UpdateSeasonInput = 
+ record {
+   seasonNumber: opt nat;
+   title: opt text;
+ };
+type UpdateProfileInput = 
+ record {
+   bio: text;
+   profilePicBlob: opt ExternalBlob;
+   username: text;
+ };
+type UpdateEpisodeInput = 
+ record {
+   description: opt text;
+   durationSeconds: opt nat;
+   episodeNumber: opt nat;
+   thumbnailUrl: opt text;
+   title: opt text;
+   videoUrl: opt text;
+ };
+type TransformationOutput = 
+ record {
+   body: blob;
+   headers: vec http_header;
+   status: nat;
+ };
+type TransformationInput = 
+ record {
+   context: blob;
+   response: http_request_result;
+ };
+type Timestamp = int;
+type SubscriptionTier = 
+ variant {
+   Free;
+   Premium;
+   Pro;
+ };
+type SubscriptionPlanConfig = 
+ record {
+   discountActive: bool;
+   discountPercent: nat;
+   features: vec text;
+   name: text;
+   planId: text;
+   priceCredits: nat;
+ };
+type StripeSessionStatus = 
+ variant {
+   completed: record {
+                response: text;
+                userPrincipal: opt text;
+              };
+   failed: record {error: text;};
+ };
+type StripeConfiguration = 
+ record {
+   allowedCountries: vec text;
+   secretKey: text;
+ };
+type SignupHistoryEntry = 
+ record {
+   currentTier: text;
+   "principal": text;
+   signedUpAt: Timestamp;
+   username: text;
+ };
+type ShowPublic = 
+ record {
+   category: Category;
+   coverImageUrl: opt text;
+   createdAt: Timestamp;
+   creatorId: UserId;
+   description: text;
+   id: ShowId;
+   isApproved: bool;
+   isFeatured: bool;
+   isFree: bool;
+   seasonCount: nat;
+   title: text;
+   totalLikes: nat;
+   totalViews: nat;
+   trailerUrl: opt text;
+ };
+type ShowId = nat;
+type SeasonPublic = 
+ record {
+   createdAt: Timestamp;
+   episodeCount: nat;
+   id: SeasonId;
+   seasonNumber: nat;
+   showId: ShowId;
+   title: text;
+ };
+type SeasonId = nat;
+type PendingSubscriptionPublic = 
+ record {
+   planName: text;
+   requestedAt: Timestamp;
+   userPrincipal: UserId;
+   username: text;
+ };
+type ExternalBlob = blob;
+type EpisodePublic = 
+ record {
+   createdAt: Timestamp;
+   description: text;
+   durationSeconds: nat;
+   episodeNumber: nat;
+   id: EpisodeId;
+   likes: nat;
+   seasonId: SeasonId;
+   showId: ShowId;
+   thumbnailUrl: opt text;
+   title: text;
+   videoUrl: opt text;
+   views: nat;
+ };
+type EpisodeId = nat;
+type CreateShowInput = 
+ record {
+   category: Category;
+   coverImageUrl: opt text;
+   description: text;
+   isFree: bool;
+   title: text;
+   trailerBlob: opt ExternalBlob;
+ };
+type CreateSeasonInput = 
+ record {
+   seasonNumber: nat;
+   showId: ShowId;
+   title: text;
+ };
+type CreateEpisodeInput = 
+ record {
+   description: text;
+   durationSeconds: nat;
+   episodeNumber: nat;
+   seasonId: SeasonId;
+   showId: ShowId;
+   thumbnailUrl: opt text;
+   title: text;
+   videoUrl: opt text;
+ };
+type CommentPublic = 
+ record {
+   authorId: UserId;
+   createdAt: Timestamp;
+   episodeId: EpisodeId;
+   id: CommentId;
+   "text": text;
+ };
+type CommentId = nat;
+type Category = 
+ variant {
+   Comedy;
+   Drama;
+   Exclusive;
+   RealityTV;
+ };
+type ApprovalStatus = 
+ variant {
+   approved;
+   pending;
+   rejected;
+ };
+type AdminAnalytics = 
+ record {
+   freeSubscribers: nat;
+   premiumSubscribers: nat;
+   proSubscribers: nat;
+   totalEpisodes: nat;
+   totalShows: nat;
+   totalUsers: nat;
+   totalViews: nat;
+ };
+service : {
+  _immutableObjectStorageBlobsAreLive: (hashes: vec blob) -> (vec bool) query;
+  _immutableObjectStorageBlobsToDelete: () -> (vec blob) query;
+  _immutableObjectStorageConfirmBlobDeletion: (blobs: vec blob) -> ();
+  _immutableObjectStorageCreateCertificate: (blobHash: text) ->
+   (_ImmutableObjectStorageCreateCertificateResult);
+  _immutableObjectStorageRefillCashier: (refillInformation:
+   opt _ImmutableObjectStorageRefillInformation) ->
+   (_ImmutableObjectStorageRefillResult);
+  _immutableObjectStorageUpdateGatewayPrincipals: () -> ();
+  _initializeAccessControl: () -> ();
+  activateSubscription: (tier: SubscriptionTier) -> ();
+  addComment: (episodeId: EpisodeId, "text": text) -> (CommentId);
+  addToWatchlist: (showId: ShowId) -> ();
+  adminApproveShow: (showId: ShowId, approved: bool) -> ();
+  adminApproveSubscription: (user: principal, approve: bool) -> ();
+  adminDeleteEpisode: (episodeId: EpisodeId) -> ();
+  adminGetAnalytics: () -> (AdminAnalytics) query;
+  adminGetSignupHistory: () -> (vec SignupHistoryEntry) query;
+  adminListPendingSubscriptions: () -> (vec PendingSubscriptionPublic) query;
+  adminListShows: () -> (vec ShowPublic) query;
+  adminListUsers: () -> (vec UserProfilePublic) query;
+  adminRemoveSubscription: (user: principal) -> (variant {
+                                                   err: text;
+                                                   ok;
+                                                 });
+  adminResetAnalytics: () -> (bool);
+  adminSetFeatured: (showId: ShowId, featured: bool) -> ();
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  createCheckoutSession: (tier: SubscriptionTier, successUrl: text,
+   cancelUrl: text) -> (text);
+  createEpisode: (input: CreateEpisodeInput) -> (EpisodeId);
+  createSeason: (input: CreateSeasonInput) -> (SeasonId);
+  createShow: (input: CreateShowInput) -> (ShowId);
+  deleteComment: (commentId: CommentId) -> ();
+  deleteEpisode: (episodeId: EpisodeId) -> ();
+  deleteShow: (showId: ShowId) -> ();
+  getCallerUserProfile: () -> (opt UserProfilePublic) query;
+  getCallerUserRole: () -> (UserRole) query;
+  getContinueWatching: () -> (vec EpisodePublic) query;
+  getEpisode: (episodeId: EpisodeId) -> (opt EpisodePublic) query;
+  getImvuRecipient: () -> (text) query;
+  getShow: (showId: ShowId) -> (opt ShowPublic) query;
+  getStripeSessionStatus: (sessionId: text) -> (StripeSessionStatus);
+  getSubscriptionPlans: () -> (vec SubscriptionPlanConfig) query;
+  getSubscriptionTier: () -> (SubscriptionTier);
+  getUserProfile: (user: principal) -> (opt UserProfilePublic) query;
+  getWatchHistory: () -> (vec WatchHistoryEntryPublic) query;
+  getWatchlist: () -> (vec ShowPublic) query;
+  hasLikedEpisode: (episodeId: EpisodeId) -> (bool) query;
+  hasLikedShow: (showId: ShowId) -> (bool) query;
+  isCallerAdmin: () -> (bool) query;
+  isCallerApproved: () -> (bool) query;
+  isStripeConfigured: () -> (bool) query;
+  likeEpisode: (episodeId: EpisodeId) -> ();
+  likeShow: (showId: ShowId) -> ();
+  listApprovals: () -> (vec UserApprovalInfo) query;
+  listApprovedShows: () -> (vec ShowPublic) query;
+  listComments: (episodeId: EpisodeId) -> (vec CommentPublic) query;
+  listEpisodes: (seasonId: SeasonId) -> (vec EpisodePublic) query;
+  listFeaturedShows: () -> (vec ShowPublic) query;
+  listSeasons: (showId: ShowId) -> (vec SeasonPublic) query;
+  listShowsByCategory: (category: Category) -> (vec ShowPublic) query;
+  listTrendingShows: () -> (vec ShowPublic) query;
+  recordView: (episodeId: EpisodeId) -> ();
+  registerUser: () -> (UserProfilePublic);
+  removeFromWatchlist: (showId: ShowId) -> ();
+  requestApproval: () -> ();
+  saveCallerUserProfile: (input: UpdateProfileInput) -> ();
+  saveImvuRecipient: (recipient: text) -> (bool);
+  saveSubscriptionPlan: (planId: text, name: text, priceCredits: nat,
+   features: vec text, discountPercent: nat, discountActive: bool) -> (
+   bool);
+  searchShows: (term: text) -> (vec ShowPublic) query;
+  setApproval: (user: principal, status: ApprovalStatus) -> ();
+  setStripeConfiguration: (config: StripeConfiguration) -> ();
+  transform: (input: TransformationInput) -> (TransformationOutput) query;
+  unlikeEpisode: (episodeId: EpisodeId) -> ();
+  unlikeShow: (showId: ShowId) -> ();
+  updateEpisode: (episodeId: EpisodeId, input: UpdateEpisodeInput) ->
+   (variant {
+      err: text;
+      ok: EpisodePublic;
+    });
+  updateSeason: (seasonId: SeasonId, input: UpdateSeasonInput) ->
+   (variant {
+      err: text;
+      ok: SeasonPublic;
+    });
+  updateShow: (input: UpdateShowInput) -> ();
+  updateWatchProgress: (episodeId: EpisodeId, progressSeconds: nat) -> ();
+}

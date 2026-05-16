@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180">
+  <defs>
+    <filter id="glowApple">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <linearGradient id="purpleGradApple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#9333ea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6d28d9;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Background — Apple clips to rounded square automatically, but fill the square -->
+  <rect width="180" height="180" fill="#000000"/>
+  <!-- Subtle purple border glow -->
+  <rect width="180" height="180" fill="none" stroke="#7c3aed" stroke-width="2" opacity="0.4"/>
+  <!-- Bold Z letter -->
+  <text
+    x="90"
+    y="124"
+    font-family="Arial Black, Arial, sans-serif"
+    font-size="104"
+    font-weight="900"
+    text-anchor="middle"
+    fill="url(#purpleGradApple)"
+    filter="url(#glowApple)"
+    letter-spacing="-4"
+  >Z</text>
+  <!-- Underline accent -->
+  <rect x="40" y="140" width="100" height="5" rx="2.5" fill="#7c3aed" opacity="0.8" filter="url(#glowApple)"/>
+</svg>

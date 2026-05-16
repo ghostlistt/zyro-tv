@@ -1,0 +1,4 @@
+// Archived notifications page - removed per user request.
+export default function NotificationsPage() {
+  return null;
+}

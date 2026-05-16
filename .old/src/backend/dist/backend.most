@@ -1,0 +1,193 @@
+// Version: 1.0.0
+type ApprovalStatus__575141016 = {#approved; #pending; #rejected};
+type Category__713295809 = {#Comedy; #Drama; #Exclusive; #RealityTV};
+type CommentId__821569710 = Nat;
+type Comment__39173977 =
+  {
+    authorId : UserId__158757552;
+    createdAt : Timestamp__301639476;
+    episodeId : EpisodeId__995057067;
+    id : CommentId__821569710;
+    var text : Text
+  };
+type Data__159895909<T> = {var count : Nat__490723111; elements : [var ?T]};
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type EpisodeId__995057067 = Nat;
+type Episode__35493801 =
+  {
+    createdAt : Timestamp__301639476;
+    var description : Text;
+    var durationSeconds : Nat;
+    var episodeNumber : Nat;
+    id : EpisodeId__995057067;
+    var likes : Nat;
+    seasonId : SeasonId__369790761;
+    showId : ShowId__580451169;
+    var thumbnailUrl : ?Text;
+    var title : Text;
+    var videoUrl : ?Text;
+    var views : Nat
+  };
+type ExternalBlob__246066408 = Blob;
+type Internal__667636161<T> =
+  {children : [var ?Node__92254746<T>]; data : Data__159895909<T>};
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__520550824<T> = {data : Data__159895909<T>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type Map__158565046<K, V> = Map__297112838<K, V>;
+type Map__297112838<K, V> =
+  {var root : Node__46230540<K, V>; var size : Nat__490723111};
+type Map__605269027<K, V> = Map__158565046<K, V>;
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type Node__92254746<T> =
+  {#internal : Internal__667636161<T>; #leaf : Leaf__520550824<T>};
+type PendingSubscription__408069080 =
+  {
+    planName : Text;
+    requestedAt : Timestamp__301639476;
+    tier : SubscriptionTier__636349934;
+    userPrincipal : UserId__158757552
+  };
+type SeasonId__369790761 = Nat;
+type Season__737946660 =
+  {
+    createdAt : Timestamp__301639476;
+    id : SeasonId__369790761;
+    var seasonNumber : Nat;
+    showId : ShowId__580451169;
+    var title : Text
+  };
+type Set__532252804<T> = Set__710576254<T>;
+type Set__710576254<T> =
+  {var root : Node__92254746<T>; var size : Nat__490723111};
+type ShowId__580451169 = Nat;
+type Show__556398996 =
+  {
+    var category : Category__713295809;
+    var coverImageUrl : ?Text;
+    createdAt : Timestamp__301639476;
+    creatorId : UserId__158757552;
+    var description : Text;
+    id : ShowId__580451169;
+    var isApproved : Bool;
+    var isFeatured : Bool;
+    var isFree : Bool;
+    var title : Text;
+    var totalLikes : Nat;
+    var totalViews : Nat;
+    var trailerBlob : ?ExternalBlob__246066408
+  };
+type StripeConfiguration__96897619 =
+  {allowedCountries : [Text]; secretKey : Text};
+type SubscriptionPlanConfig__300597204 =
+  {
+    discountActive : Bool;
+    discountPercent : Nat;
+    features : [Text];
+    name : Text;
+    planId : Text;
+    priceCredits : Nat
+  };
+type SubscriptionTier__636349934 = {#Free; #Premium; #Pro};
+type Timestamp__301639476 = Int;
+type UserId__158757552 = Principal;
+type UserProfile__436039588 =
+  {
+    var bio : Text;
+    createdAt : Timestamp__301639476;
+    principal : UserId__158757552;
+    var profilePicBlob : ?ExternalBlob__246066408;
+    var subscriptionExpiresAt : ?Int;
+    var subscriptionTier : SubscriptionTier__636349934;
+    var username : Text
+  };
+type UserRole__1054455867 = {#admin; #guest; #user};
+type WatchHistoryEntry__97137782 =
+  {
+    episodeId : EpisodeId__995057067;
+    var lastWatchedAt : Timestamp__301639476;
+    var progressSeconds : Nat;
+    showId : ShowId__580451169
+  };
+actor {
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__605269027<Principal, UserRole__1054455867>
+    };
+  stable approvalState :
+    {
+      var approvalStatus :
+        Map__605269027<Principal, ApprovalStatus__575141016>
+    };
+  stable comments :
+    {
+      var root : Node__46230540<CommentId__821569710, Comment__39173977>;
+      var size : Nat__490723111
+    };
+  stable episodeLikes :
+    {
+      var root :
+        Node__46230540<EpisodeId__995057067, Set__532252804<Principal>>;
+      var size : Nat__490723111
+    };
+  stable episodes :
+    {
+      var root : Node__46230540<EpisodeId__995057067, Episode__35493801>;
+      var size : Nat__490723111
+    };
+  stable imvuRecipient : {var value : Text};
+  stable nextCommentId : {var value : Nat};
+  stable nextEpisodeId : {var value : Nat};
+  stable nextSeasonId : {var value : Nat};
+  stable nextShowId : {var value : Nat};
+  stable pendingSubscriptions :
+    {
+      var root : Node__46230540<Principal, PendingSubscription__408069080>;
+      var size : Nat__490723111
+    };
+  stable seasons :
+    {
+      var root : Node__46230540<SeasonId__369790761, Season__737946660>;
+      var size : Nat__490723111
+    };
+  stable showLikes :
+    {
+      var root : Node__46230540<ShowId__580451169, Set__532252804<Principal>>;
+      var size : Nat__490723111
+    };
+  stable shows :
+    {
+      var root : Node__46230540<ShowId__580451169, Show__556398996>;
+      var size : Nat__490723111
+    };
+  stable stripeConfig : {var value : ?StripeConfiguration__96897619};
+  stable subscriptionPlans :
+    {
+      var root : Node__46230540<Text, SubscriptionPlanConfig__300597204>;
+      var size : Nat__490723111
+    };
+  stable userProfiles :
+    {
+      var root : Node__46230540<Principal, UserProfile__436039588>;
+      var size : Nat__490723111
+    };
+  stable watchHistory :
+    {
+      var root :
+        Node__46230540<Principal,
+                        Map__605269027<EpisodeId__995057067,
+                                        WatchHistoryEntry__97137782>>;
+      var size : Nat__490723111
+    };
+  stable watchlists :
+    {
+      var root : Node__46230540<Principal, Set__532252804<ShowId__580451169>>;
+      var size : Nat__490723111
+    }
+};
